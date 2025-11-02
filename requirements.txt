@@ -1,0 +1,9 @@
+torch
+torchvision
+numpy
+tqdm
+apex
+transformers >= 4.37
+flash_attn
+diffusers
+accelerate
