@@ -62,6 +62,7 @@ pip install -r requirements.txt
 ### 2. Prepare Dataset
 
 Download and organize the dataset as follows (e.g., monet2photo, vangogh2photo):
+Monet and Van Gogh datasets could be downloaded from this [link](https://efrosgans.eecs.berkeley.edu/cyclegan/datasets/).
 
 ```
 |-- ./datasets
