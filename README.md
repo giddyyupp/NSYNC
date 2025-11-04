@@ -14,6 +14,11 @@
 <!-- [![arXiv](https://img.shields.io/badge/arXiv-PDF-red)](link_to_arxiv) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) -->
 
+## NSYNC:
+
+![Teaser](docs/teaser.png)
+
+
 ## 🧠 Abstract
 
 Current text conditioned image generation methods
