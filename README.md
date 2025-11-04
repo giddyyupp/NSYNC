@@ -159,14 +159,14 @@ FID and KID metrics are calculated using this [repo](https://github.com/abdulfat
 
 If you find this work useful, please cite:
 
-<!-- ```bibtex
-@inproceedings{nsync,
-  title={NSYNC: Negative Synthetic Image Generation for Contrastive Training to Improve Stylized Text-To-Image Translation},
-  author={},
-  booktitle={TODO},
-  year={2025}
+```bibtex
+@article{ozturk2025nsync,
+      title={NSYNC: Negative Synthetic Image Generation for Contrastive Training to Improve Stylized Text-To-Image Translation}, 
+      author={Serkan Ozturk and Samet Hicsonmez and Pinar Duygulu},
+      journal={arXiv preprint arXiv:2511.01517},
+      year={2025}
 }
-``` -->
+```
 
 ---
 
