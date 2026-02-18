@@ -3,9 +3,8 @@ from tqdm import tqdm
 import torch
 import PIL
 from PIL import Image
-from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
-from transformers import CLIPFeatureExtractor, CLIPTextModel, CLIPTokenizer
-
+from diffusers import StableDiffusionPipeline, DiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusion3Pipeline
+# from transformers import CLIPFeatureExtractor, CLIPTextModel, CLIPTokenizer
 import config as cfg
 
 
@@ -21,11 +20,24 @@ print(save_dir)
 prompts = os.listdir(prompts_dir)
 os.makedirs(save_dir, exist_ok=True)
 
-pipe = StableDiffusionPipeline.from_pretrained(
-    pretrained_model_name_or_path,
-    torch_dtype=torch.float16,
-    safety_checker=None
-).to("cuda")
+if cfg.sd_version == 'sd35':
+    pipe = StableDiffusion3Pipeline.from_pretrained(
+        pretrained_model_name_or_path, 
+        torch_dtype=torch.bfloat16,
+        safety_checker=None
+    ).to("cuda")
+elif cfg.sd_version == 'sdxl':
+    pipe = DiffusionPipeline.from_pretrained(
+        pretrained_model_name_or_path, 
+        torch_dtype=torch.bfloat16,
+        safety_checker=None
+    ).to("cuda")
+else:
+    pipe = StableDiffusionPipeline.from_pretrained(
+        pretrained_model_name_or_path,
+        torch_dtype=torch.float16,
+        safety_checker=None
+    ).to("cuda")
 
 
 for prompt in tqdm(prompts):
@@ -38,12 +50,13 @@ for prompt in tqdm(prompts):
         prompt += " a natural image, no styles." 
     else:  # regular generic set with baseline sd model
         prompt += " in the style of " + special_token
+    save_path = os.path.join(save_dir, image_name + ".png")
+    if os.path.exists(save_path):
+        continue
     imgs = pipe(prompt, num_images_per_prompt=img_per_prompt, num_inference_steps=50, guidance_scale=7.5).images
     # save imgs
     for i,img in enumerate(imgs):
         if img_per_prompt > 1:
             save_path = os.path.join(save_dir, image_name + "_" + str(i) + ".png")
-        else:
-            save_path = os.path.join(save_dir, image_name + ".png")
         img = img.resize((img_size, img_size))
         img.save(save_path)

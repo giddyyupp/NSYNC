@@ -18,7 +18,23 @@ img_per_prompt = cfg.img_per_prompt_inference
 img_size = cfg.img_size
 use_kohya_sd = cfg.use_kohya_sd
 
-prompts = os.listdir(prompts_dir)
+test_target_name = cfg.test_target_name
+prompt_type = 'paintings'
+
+if test_target_name in ['monet2photo', 'vangogh2photo', 'pmondrian']:
+    prompt_type = 'paintings'
+elif test_target_name in ['ghibli_dataset']:
+    prompt_type = 'animes'
+else:
+    prompt_type = 'illustrations'
+
+prompts_f = os.path.join(cfg.random_prompt_dir, f"{prompt_type}.txt") 
+
+with open(prompts_f, 'r') as ff:
+    prompts = ff.readlines()
+
+prompts = [prompt.replace('\n', '') for prompt in prompts]
+
 os.makedirs(save_dir, exist_ok=True)
 
 if cfg.sd_version == 'sdxl':
@@ -43,21 +59,24 @@ else:
         torch_dtype=torch.float16,
         safety_checker=None
     ).to("cuda")
-    # tt = torch.load(embed_path)
-    pipe.load_textual_inversion(embed_path)  # , token=cfg.placeholder_token
+    if not version == 'baseline':
+        tt = torch.load(embed_path)
+        pipe.load_textual_inversion(embed_path)
 
 # 2. inference loop:
-for prompt in tqdm(prompts):
-    image_name = os.path.splitext(prompt)[0]
+for ind, prompt in tqdm(enumerate(prompts)):
+    image_name = f"img_{ind}"
     save_path = os.path.join(save_dir, image_name + ".png")
     if os.path.exists(save_path):
         continue
 
     # read prompt
-    prompt_file = os.path.join(prompts_dir, prompt)
-    with open(prompt_file, "r") as p_file:
-        prompt = p_file.read()
-    prompt = "In the style of " + special_token + ", " + prompt
+    if not version == 'baseline':
+        prompt = "In the style of " + special_token + ", " + prompt
+    else:
+        prompt = "In the style of " + cfg.flux_style_id + ", " + prompt
+
+    print(prompt)
 
     with torch.no_grad():
         imgs = pipe(prompt, num_images_per_prompt=img_per_prompt, num_inference_steps=50, guidance_scale=7.5).images

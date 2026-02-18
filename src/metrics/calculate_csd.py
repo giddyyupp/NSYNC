@@ -252,12 +252,13 @@ def main_worker(gpu, ngpus_per_node, args):
     seed = 42
     np.random.seed(seed) #setting the random seed
 
-    generic_target_name = "monet2photo"
+    generic_target_name = "pmondrian"
     generic_split = "testA"
-    model_to_test = 'v4.2'
-    style_images_dir = f"./datasets/{generic_target_name}/{generic_split}"  # TODO: fix the path to real test images
+    model_to_test = 'baseline' # v4.2
+    style_images_dir = f"../../../datasets/{generic_target_name}/{generic_split}"  # TODO: fix the path to real test images
 
-    predictions_path = f"./results/{model_to_test}/img2txt2img/{generic_target_name}_8000/"  # TODO: fix the path to generated images
+    predictions_path = f"../../../results_sd15/{model_to_test}/img2txt2img/{generic_target_name}_8000_random_prompts/"  # TODO: fix the path to generated images
+    # predictions_path = f"../../../results_sd15/{model_to_test}/{generic_target_name}_8000_random_prompts/testA"  # TODO: fix the path to generated images
 
     style_images = os.listdir(style_images_dir)
     style_images.sort()

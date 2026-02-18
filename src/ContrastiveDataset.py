@@ -103,6 +103,8 @@ class ContrastiveTIDataset(Dataset):
             return_tensors="pt",
         ).input_ids[0]
 
+        example['prompt'] = style_prompt
+        
         # default to score-sde preprocessing
         img = np.array(image).astype(np.uint8)
 
